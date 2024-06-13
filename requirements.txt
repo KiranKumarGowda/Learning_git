@@ -1,0 +1,3 @@
+# requirements.txt
+# Example: Add any dependencies your project needs
+# flask==2.0.1
