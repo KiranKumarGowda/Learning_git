@@ -1,12 +1,14 @@
 import pytest
 from app import app
 
+# dfhudhfugdu
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
+# oijfufgudfgh
 def test_hello_world(client):
     response = client.get('/')
     assert response.status_code == 200
