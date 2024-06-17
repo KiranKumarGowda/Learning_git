@@ -1,16 +1,13 @@
-# test_app.py
 import pytest
-from app import add, subtract
+from app import app
 
-def test_add():
-    assert add(2, 3) == 5
-    assert add(-1, 1) == 0
-    assert add(-1, -1) == -2
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
 
-def test_subtract():
-    assert subtract(3, 2) == 1
-    assert subtract(2, 3) == -1
-    assert subtract(-1, -1) == 0
-
-if __name__ == "__main__":
-    pytest.main()
+def test_hello_world(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.get_json() == {"message": "Hello, World!"}

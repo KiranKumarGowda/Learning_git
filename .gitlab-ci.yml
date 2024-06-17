@@ -1,54 +1,35 @@
 stages:
   - lint
   - test
+  - build
   - deploy
 
 before_script:
   - apt-get update
-  - apt-get install -y python3 python3-pip python3-venv
-  - python3 --version
-  - pip3 --version
+  - apt-get install -y python3 python3-pip python3-venv docker.io
 
 lint:
   stage: lint
   script:
     - python3 -m venv venv
-    - echo "Virtual environment created"
-    - ls -l venv
-    - | 
-      if [ -f venv/bin/activate ]; then 
-        echo "Activation script found";
-      else 
-        echo "Activation script not found"; 
-        exit 1;
-      fi
     - source venv/bin/activate
-    - echo "Virtual environment activated"
     - pip install flake8
     - flake8 .
-    - echo "Linting completed"
 
 test:
   stage: test
   script:
     - python3 -m venv venv
-    - echo "Virtual environment created"
-    - ls -l venv
-    - | 
-      if [ -f venv/bin/activate ]; then 
-        echo "Activation script found";
-      else 
-        echo "Activation script not found"; 
-        exit 1;
-      fi
     - source venv/bin/activate
-    - echo "Virtual environment activated"
-    - pip install pytest
+    - pip install -r requirements.txt
     - pytest
-    - echo "Testing completed"
+
+build:
+  stage: build
+  script:
+    - docker build -t my-flask-app .
 
 deploy:
   stage: deploy
   script:
-    - echo "Deploying the application..."
-    # Add your deployment scripts here
+    - docker run -d -p 5000:5000 my-flask-app
