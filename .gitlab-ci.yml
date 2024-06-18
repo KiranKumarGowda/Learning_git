@@ -34,13 +34,16 @@ test:
 build:
   stage: build
   script:
+    - echo "Building Docker image"
     - docker version
     - docker info
     - docker build -t my-flask-app:latest .
-    - docker images  # List images to verify the image is built
+    - docker images  # Verify image is built
+    - docker image inspect my-flask-app:latest  # Inspect the image
 
 deploy:
   stage: deploy
   script:
-    - docker images  # List images to ensure the image is present
+    - echo "Running Docker container"
+    - docker images  # Verify image is present before running
     - docker run -d -p 5000:5000 my-flask-app:latest
